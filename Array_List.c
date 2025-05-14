@@ -66,7 +66,16 @@ int add_head(char* strArray[], char* data)
         i++;
     }
 
-    while
+    while(1)
+    {
+        strArray[i-1]=strArray[i];
+        i--;
+
+        if(i==1)
+        {
+            break;
+        }
+    }
 
     strArray[0] = temp;
 }
