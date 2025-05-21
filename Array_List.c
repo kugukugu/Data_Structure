@@ -4,213 +4,92 @@
 
 int head = 0;
 
-// 전달받은 data로 새로운 노드를 생성
-struct Node* create_node(char* data)
-{
-    struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
-    temp->data = (char*)malloc(strlen(data)+1);
-    strcpy(temp->data, data);
-    temp ->next = NULL;
-    return temp;
-}
-
-// 전달받은 node에 대해 메모리 해제
-void delete_node(struct Node* node)
-{
-    free (node->data);
-    free(node);
-}
-
 // 전달받은 head 를 이용해 연결리스트의 모든 노드에 대해서 메모리 해제
-void delete_all(struct Node* head)
+void delete_all(char* strArray[])
 {
-    struct Node* temp;
+    int i;
 
-    while(head != NULL)
+    for(i=0; strArray[i]!=NULL; i++)
     {
-        temp = head->next;
-        delete_node(head);
-        head = temp;
+        free(strArray[i]);
     }
 }
 
 // 전달받은 head를 이용해 연결리스트의 맨 끝에 data 노드를 추가
-int add_tail(struct Node** head, char* data)
+int add_tail(char* strArray[], char* data)
 {
-    struct Node* temp = create_node(data);
+    int i;
 
-    if(*head == NULL)
+    for(i=0;  strArray[i] != NULL; i++)
     {
-        *head=temp;
+
     }
-    else
-    {
-        struct Node* tmp = *head;
-        while(tmp->next != NULL)
-        {
-            tmp = tmp->next;
-        }
-        tmp->next=temp;
-    }
+    strArray[i] = (char *)malloc(strlen(data)+1);
+    strcpy(strArray[i], data);
 }
 
 // 전달받은 head를 이용해 연결리스트의 맨 앞에 data 노드를 추가
 int add_head(char* strArray[], char* data)
 {
     int i=0;
-    char *temp = (char *)malloc(strlen(data)+1);;
-    strcpy(temp, data);
 
-    while(strArray[i] != NULL)
+    for(i=99;  i>0; i--)
     {
-        i++;
+        strArray[i]=strArray[i-1];
     }
 
-    while(1)
-    {
-        strArray[i-1]=strArray[i];
-        i--;
-
-        if(i==1)
-        {
-            break;
-        }
-    }
-
-    strArray[0] = temp;
+    strArray[0] = (char *)malloc(strlen(data)+1);
+    strcpy(strArray[0], data);
 }
 
 // 전달받은 head를 이용해 연결리스트의 값 중 target_data 노드의 다음에 data 노드를 추가
-int add_next(struct Node** head, char* target_data, char* data)
+int add_next(char* strArray[], char* target_data, char* data)
 {
-    struct Node* temp = *head;
+    int i, j;
+    int count=0;
 
-    while(temp  != NULL)
+    for(i=0; i<100; i++)
     {
-        if(strcmp(temp->data, target_data)==0)
+        if(strcmp(strArray[i], target_data)==0)
         {
+            count = 1;
             break;
         }
-        temp= temp->next;
     }
 
-    if(temp==NULL)
+    if(i==99 || count==0)
     {
         return 0;
     }
+    else if(count==1)
+    {
+        for(j=99; j>i+1; j--)
+        {
+            strArray[j]=strArray[j-1];
+        }
+        strArray[i+1]=(char*)malloc(strlen(data)+1);
+        strcpy(strArray[i+1], data);
 
-    struct Node* new1= create_node(data);
-
-    new1->next=temp->next;
-    temp->next=new1;
-
-    return 1;
+        return 1;
+    }
 }
 
 // 전달받은 head를 이용해 연결리스트의 i번째 노드 다음에 data 노드를 추가
-int add_index(struct Node** head, int index, char* data)
+int add_index(char* strArray[], int index, char* data)
 {
-    struct Node *temp = *head;
-    int count = 0;
-
-    while(temp != NULL)
-    {
-        if(count == index)
-        {
-            break;
-        }
-        temp = temp ->next ;
-        count ++;
-    }
-
-    if(temp==NULL)
+    if(strArray[99] != NULL)
     {
         return 0;
     }
 
-    struct Node* new1= create_node(data);
-
-    new1->next=temp->next;
-    temp->next=new1;
-
-    return 1;
-}
-
-// 전달받은 head를 이용해 연결리스트 전체 노드의 data를 보기좋게 출력
-void print_linkedlist(struct Node* head)
-{
-    while(head != NULL)
+    int i;
+    for(i=99; i>index; i--)
     {
-        printf("%s >> ", head->data);
-        head = head->next;
-    }
-    printf("\n");
-}
-
-int delete_target(struct Node** head, char* target_data)
-{
-    struct Node* temp = *head;
-    struct Node* prev_temp = NULL;
-
-    while(temp  != NULL)
-    {
-        if(strcmp(temp->data, target_data)==0)
-        {
-            break;
-        }
-        prev_temp = temp;
-        temp= temp->next;
+        strArray[i]=strArray[i-1];
     }
 
-    if(temp==NULL)
-    {
-        return 0;
-    }
-
-    if(prev_temp == NULL)
-    {
-        *head = temp->next;
-    }
-    else
-    {
-        prev_temp->next = temp->next;
-    }
-    delete_node(temp);
-
-    return 1;
-}
-
-int delete_index(struct Node** head, int index)
-{
-    struct Node* temp = *head;
-    struct Node* prev_temp = NULL;
-    int count = 0;
-
-    while(temp  != NULL)
-    {
-        if(count == index)
-        {
-            break;
-        }
-        prev_temp = temp;
-        temp= temp->next;
-        count ++;
-    }
-
-    if(temp==NULL)
-    {
-        return 0;
-    }
-
-    if(prev_temp == NULL)
-    {
-        *head = temp->next;
-    }
-    else
-    {
-        prev_temp->next = temp->next;
-    }
-    delete_node(temp);
+    strArray[i]=(char *)malloc(strlen(data)+1);
+    strcpy(strArray[i], data);
 
     return 1;
 }
@@ -221,6 +100,24 @@ int main()
 
     //배열의 맨 앞에 hello 추가
     add_head(strArray, "hello");
+
+    //배열의 맨 뒤에 world 추가
+    add_tail(strArray, "world");
+
+    //배열의 hello 뒤에  good 추가
+    add_next(strArray, "hello", "good");
+
+    //배열의 2번 째 인덱스에 bad를 추가
+    add_index(strArray, 2, "bad");
+
+    int i;
+    for(i=0; strArray[i]!=NULL; i++)
+    {
+        printf("%s ", strArray[i]);
+    }
+    printf("\n");
+
+    delete_all(strArray);
 
 	return 0;
 }
