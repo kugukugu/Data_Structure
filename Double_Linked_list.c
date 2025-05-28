@@ -80,6 +80,16 @@ void add_tail_fast(Node**head, Node**tail, char* data)
     (*tail)=temp;
 }
 
+int add_next(Node**head, Node**tail, char* target_data,char* data)
+{
+
+}
+
+int add_before(Node**head, Node**tail, char* target_data,char* data)
+{
+
+}
+
 int main()
 {
     Node* head = NULL;
