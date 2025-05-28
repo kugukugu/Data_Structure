@@ -54,7 +54,7 @@ void enqueue(struct Queue* q, char* data)
     q->tail = temp;
 }
 
-char* dequeue(struct Queue* q, char* temp)
+void dequeue(struct Queue* q, char* temp)
 {
     struct Node* tmp = q->head;
 
@@ -67,8 +67,6 @@ char* dequeue(struct Queue* q, char* temp)
     strcpy(temp, q->head->data);
     q->head = q->head->next;
     delete_node(tmp);
-
-    return temp;
 }
 
 void clear_queue(struct Queue* q)
