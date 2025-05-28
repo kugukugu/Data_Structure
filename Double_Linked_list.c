@@ -82,12 +82,31 @@ void add_tail_fast(Node**head, Node**tail, char* data)
 
 int add_next(Node**head, Node**tail, char* target_data,char* data)
 {
+    Node* temp = create_node(data);
+    Node* test ;
+
+    for(test=(*head); test!=NULL; test=test->next)
+    {
+        if(strcmp(test->data, target_data)==0)
+        {
+            break;
+        }
+    }
+
+    if(test->next==NULL)
+    {
+
+
+    }
+
+
+
 
 }
 
 int add_before(Node**head, Node**tail, char* target_data,char* data)
 {
-
+    Node* temp = create_node(data);
 }
 
 int main()
@@ -98,6 +117,9 @@ int main()
     add_head(&head, &tail, "hello");
     add_tail(&head, &tail, "world");
     add_tail_fast(&head, &tail, "nice");
+
+    add_next(&head, &tail, "hello", "good");
+    add_before(&head, &tail, "good", "very good");
 
 
     return 0;
