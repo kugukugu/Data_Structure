@@ -85,7 +85,7 @@ void print_queue(struct Queue* q)
 {
     struct Node* tmp ;
 
-    for (tmp = q->head; tmp != NULL; tmp = q->head->next) {
+    for (tmp = q->head; tmp != NULL; tmp = tmp->next) {
         printf("%s >> ", tmp->data);
     }
     printf("\n");
@@ -104,7 +104,11 @@ int main()
     enqueue(&q, "nice");
 
     dequeue(&q, temp);
-    printf("%s, ", temp);
+    printf("%s\n", temp);
+
+    print_queue(&q);
+    clear_queue(&q);
+    print_queue(&q);
 
     return 0;
 }
