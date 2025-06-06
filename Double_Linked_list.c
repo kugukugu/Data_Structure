@@ -154,7 +154,7 @@ int add_index(Node** head, Node** tail, int index, char* data)
     if(tmp == NULL)
     {
             if(index ==0)
-                return add_head(head, tail, data)
+                return add_head(head, tail, data);
             if((index-1)==i)
                 add_tail_fast(head, tail, data);
             return 0;
@@ -162,13 +162,85 @@ int add_index(Node** head, Node** tail, int index, char* data)
 
     if(index==0)
     {
-        return add_head(head, tail, data)
+        return add_head(head, tail, data);
     }
 
     temp->next = tmp;
     temp->prev = tmp->prev;
     tmp->prev = temp;
     temp->prev->next = temp;
+}
+
+int delete_target(Node** head, Node** tail, char* target_data)
+{
+    Node *test;
+
+    for (test = *head; test != NULL; test = test->next)
+    {
+        if (strcmp(test->data, target_data) == 0)
+        {
+            if(test->prev == NULL)
+            {
+                (*head)=test->next;
+
+                if(test->next ==NULL)
+                {
+                    (*tail)=NULL;
+                }
+
+                if((*head)!=NULL)
+                {
+                    (*head)->prev=NULL;
+                }
+            }
+            else
+            {
+                test->prev->next = test->next;
+
+                if(test->next !=NULL)
+                {
+                    test->next->prev = test->prev;
+                }
+            }
+            free(test->data);
+            free(test);
+
+            return 1;
+        }
+    }
+}
+
+int delete_index(Node** head, Node** tail, int index)
+{
+
+}
+
+Node* get_node_index_tail(Node** head, Node** tail, int index)
+{
+
+}
+
+void delete_all(Node* head)
+{
+
+}
+
+void reverse_list(Node **head, Node** tail)
+{
+    Node *current=(*head),* temp;
+
+    while(current!=NULL)
+    {
+        temp=current->next;
+        current->next=current->prev;
+        current->prev=temp;
+        current=temp;
+    }
+
+    Node *tmp =(*head);
+
+    (*head)=(*tail);
+    (*tail)=tmp;
 }
 
 void print_linkedlist(Node *head)
@@ -179,6 +251,31 @@ void print_linkedlist(Node *head)
     {
         printf("%s >>", test->data);
         test = test->next;
+    }
+}
+
+void print_reverse_linkedlist(Node *head)
+{
+    Node *test ;
+
+    for(test=head; test->next !=NULL; test=test->next)
+        ;
+
+    while(test!=NULL)
+    {
+        printf("%s >>", test->data);
+        test = test->prev;
+    }
+}
+
+void print_from_tail(Node* tail)
+{
+     Node *test=tail ;
+
+      while(test!=NULL)
+    {
+        printf("%s >>", test->data);
+        test = test->prev;
     }
 }
 
@@ -199,7 +296,35 @@ int main()
     add_next(&head, &tail, "hello", "good");
     add_before(&head, &tail, "good", "very good");
 
+    add_index(&head, &tail, 2, "bad");
+    add_index(&head, &tail, 10, "too bad");
+
     print_linkedlist(head);
+    printf("\n");
+
+    print_reverse_linkedlist(head);
+    printf("\n");
+
+    print_from_tail(tail);
+    printf("\n");
+
+    delete_target(&head, &tail, "world");
+    print_linkedlist(head);
+    printf("\n");
+
+    /*delete_index(&head, &tail, 1);
+    print_linkedlist(head);
+    printf("\n");
+
+    Node* found = get_node_index_tail(&head, &tail, 1);
+    printf("find node: &s\n", found->data);*/
+
+    reverse_list(&head, &tail);
+    print_linkedlist(head);
+    printf("\n");
+
+    //delete_all(head);
+    //print_linkedlist(head);
 
     return 0;
 }
