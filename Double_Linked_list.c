@@ -100,11 +100,11 @@ int add_next(Node** head, Node** tail, char* target_data, char* data)
                 temp->next->prev = temp;
             }
 
-            return 0;
+            return 1;
         }
     }
 
-    return 1;
+    return 0;
 }
 
 int add_before(Node** head, Node** tail, char* target_data, char* data)
@@ -125,11 +125,11 @@ int add_before(Node** head, Node** tail, char* target_data, char* data)
                 temp->prev->next = temp;
             }
 
-            return 0;
+            return 1;
         }
     }
 
-    return 1;
+    return 0;
 }
 
 int main()
