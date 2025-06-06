@@ -138,6 +138,39 @@ int add_before(Node** head, Node** tail, char* target_data, char* data)
     return 0;
 }
 
+int add_index(Node** head, Node** tail, int index, char* data)
+{
+    int i;
+    Node* temp = create_node(data);
+    Node *tmp = (*head);
+
+    for(i=0; i<index; i++) // = = =//2
+    {
+        tmp= tmp->next;
+        if(tmp==NULL)
+            break;
+    }
+
+    if(tmp == NULL)
+    {
+            if(index ==0)
+                return add_head(head, tail, data)
+            if((index-1)==i)
+                add_tail_fast(head, tail, data);
+            return 0;
+    }
+
+    if(index==0)
+    {
+        return add_head(head, tail, data)
+    }
+
+    temp->next = tmp;
+    temp->prev = tmp->prev;
+    tmp->prev = temp;
+    temp->prev->next = temp;
+}
+
 void print_linkedlist(Node *head)
 {
     Node *test=head;
@@ -159,6 +192,7 @@ int main()
     {
         printf("fail!\n");
     }
+
     add_tail(&head, &tail, "world");
     add_tail_fast(&head, &tail, "nice");
 
