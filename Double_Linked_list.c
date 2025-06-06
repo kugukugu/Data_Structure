@@ -138,6 +138,17 @@ int add_before(Node** head, Node** tail, char* target_data, char* data)
     return 0;
 }
 
+void print_linkedlist(Node *head)
+{
+    Node *test=head;
+
+    while(test!=NULL)
+    {
+        printf("%s >>", test->data);
+        test = test->next;
+    }
+}
+
 int main()
 {
     Node* head = NULL;
@@ -154,6 +165,7 @@ int main()
     add_next(&head, &tail, "hello", "good");
     add_before(&head, &tail, "good", "very good");
 
+    print_linkedlist(head);
 
     return 0;
 }
