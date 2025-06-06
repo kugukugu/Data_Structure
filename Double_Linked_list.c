@@ -10,12 +10,12 @@ typedef struct _Node {
 
 Node* create_node(char* data)
 {
-    Node* temp = (Node *)malloc(sizeof(Node));
-    temp->data = (char*)malloc(strlen(data)+1);
+    Node* temp = (Node*)malloc(sizeof(Node));
+    temp->data = (char*)malloc(strlen(data) + 1);
     strcpy(temp->data, data);
 
-    temp->prev=NULL;
-    temp->next=NULL;
+    temp->prev = NULL;
+    temp->next = NULL;
 
     return temp;
 }
@@ -26,87 +26,110 @@ void delete_node(Node* node)
     free(node);
 }
 
-void add_head(Node**head, Node**tail, char* data)
+void add_head(Node** head, Node** tail, char* data)
 {
     Node* temp = create_node(data);
 
-    if((*head)==NULL)
+    if ((*head) == NULL)
     {
-        (*head)=temp;
-        (*tail)=temp;
+        (*head) = temp;
+        (*tail) = temp;
         return;
     }
 
     temp->next = (*head);
     (*head)->prev = temp;
-    (*head)=temp;
+    (*head) = temp;
 }
 
-void add_tail(Node**head, Node**tail, char* data)
+void add_tail(Node** head, Node** tail, char* data)
 {
     Node* temp = create_node(data);
-    Node* test = (*head) ;
+    Node* test = (*head);
 
-     if((*head)==NULL)
+    if ((*head) == NULL)
     {
-        (*head)=temp;
-        (*tail)=temp;
+        (*head) = temp;
+        (*tail) = temp;
         return;
     }
 
-    while(test->next!=NULL)
+    while (test->next != NULL)
     {
         test = test->next;
     }
 
     temp->prev = test;
     test->next = temp;
-    (*tail)=temp;
+    (*tail) = temp;
 }
 
-void add_tail_fast(Node**head, Node**tail, char* data)
+void add_tail_fast(Node** head, Node** tail, char* data)
 {
     Node* temp = create_node(data);
 
-    if((*tail)==NULL)
+    if ((*tail) == NULL)
     {
-        (*head)=temp;
-        (*tail)=temp;
+        (*head) = temp;
+        (*tail) = temp;
         return;
     }
 
     temp->prev = (*tail);
     (*tail)->next = temp;
-    (*tail)=temp;
+    (*tail) = temp;
 }
 
-int add_next(Node**head, Node**tail, char* target_data,char* data)
+int add_next(Node** head, Node** tail, char* target_data, char* data)
 {
     Node* temp = create_node(data);
-    Node* test ;
+    Node* test, *tmp;
 
-    for(test=(*head); test!=NULL; test=test->next)
+    for (test = (*head); test != NULL; test = test->next)
     {
-        if(strcmp(test->data, target_data)==0)
+        if (strcmp(test->data, target_data) == 0)
         {
-            break;
+           /* tmp = test->next;
+            test->next = temp;*/
+            temp->prev = test;
+            temp->next = test->next;
+            test->next = temp;
+
+            if (temp->next != NULL)
+            {
+                temp->next->prev = temp;
+            }
+
+            return 0;
         }
     }
 
-    if(test->next==NULL)
-    {
-
-
-    }
-
-
-
-
+    return 1;
 }
 
-int add_before(Node**head, Node**tail, char* target_data,char* data)
+int add_before(Node** head, Node** tail, char* target_data, char* data)
 {
     Node* temp = create_node(data);
+    Node* test, *tmp;
+
+    for (test = *head; test != NULL; test = test->next)
+    {
+        if (strcmp(test->data, target_data) == 0)
+        {
+            temp->prev = test->prev;
+            temp->next = test;
+            test->prev = temp;
+
+            if (temp->prev != NULL)
+            {
+                temp->prev->next = temp;
+            }
+
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 int main()
