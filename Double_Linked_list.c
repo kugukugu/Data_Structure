@@ -26,20 +26,26 @@ void delete_node(Node* node)
     free(node);
 }
 
-void add_head(Node** head, Node** tail, char* data)
+int add_head(Node** head, Node** tail, char* data)
 {
     Node* temp = create_node(data);
+    if(temp == NULL)
+    {
+        return 0;
+    }
 
     if ((*head) == NULL)
     {
         (*head) = temp;
         (*tail) = temp;
-        return;
+        return 1;
     }
 
     temp->next = (*head);
     (*head)->prev = temp;
     (*head) = temp;
+
+    return 1;
 }
 
 void add_tail(Node** head, Node** tail, char* data)
@@ -137,7 +143,11 @@ int main()
     Node* head = NULL;
     Node* tail = NULL;
 
-    add_head(&head, &tail, "hello");
+    int r= add_head(&head, &tail, "hello");
+    if(r==0)
+    {
+        printf("fail!\n");
+    }
     add_tail(&head, &tail, "world");
     add_tail_fast(&head, &tail, "nice");
 
