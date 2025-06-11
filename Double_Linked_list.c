@@ -222,7 +222,14 @@ Node* get_node_index_tail(Node** head, Node** tail, int index)
 
 void delete_all(Node* head)
 {
+     Node* temp;
 
+     while (head != NULL)
+     {
+         temp = head->next;
+         delete_node(head);
+         head = temp;
+     }
 }
 
 void reverse_list(Node **head, Node** tail)
