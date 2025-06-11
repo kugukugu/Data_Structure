@@ -213,58 +213,25 @@ int delete_target(Node** head, Node** tail, char* target_data)
 
 int delete_index(Node** head, Node** tail, int index)
 {
+    int i;
+    Node* temp = (*head);
 
-    Node* temp = NULL;
-
-    if (head == NULL)
+    if(temp==NULL)
     {
         return 1;
     }
 
-    if (index == 0)
-    {
-        temp = (*head);
-        (*head) = (*head)->next;
-        delete_node((temp));
-        if ((*head) != NULL)
-        {
-            (*head)->prev = NULL;
-        }
-        else
-        {
-            (*tail) = NULL;
-        }
-    }
+    if(temp->prev == NULL)
+        (*head)= temp->next;
     else
-    {
-        int i;
-        temp = (*head);
+        temp->prev->next=temp->next;
 
-        for (i = 0; i < index; i++)
-        {
-            temp = temp->next;
-            if (temp == NULL)
-            {
-                return 1;
-            }
-        }
+    if(temp->next==NULL)
+        (*tail)=temp->prev;
+    else
+        temp->next->prev = temp->prev;
 
-
-        temp->prev->next = temp->next;
-        if (temp->next != NULL)
-        {
-            temp->next->prev = temp->prev;
-        }
-        else
-        {
-            (*tail) = temp->prev;
-        }
-
-        delete_node(temp);
-
-        return 0;
-
-    }
+      delete_node(temp);
 }
 
 Node* get_node_index_tail(Node** tail, int index)
