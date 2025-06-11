@@ -270,7 +270,22 @@ int delete_index(Node** head, Node** tail, int index)
 
 Node* get_node_index_tail(Node** head, Node** tail, int index)
 {
+    Node* temp = NULL;
 
+    int i;
+
+    temp = (*head);
+
+    for (i = 0; i < index; i++)
+    {
+        temp = temp->next;
+        if (temp == NULL)
+        {
+            return NULL;
+        }
+    }
+
+    return temp;
 }
 
 void delete_all(Node* head)
@@ -376,8 +391,8 @@ int main()
     print_linkedlist(head);
     printf("\n");
 
-    /*Node* found = get_node_index_tail(&head, &tail, 1);
-    printf("find node: &s\n", found->data);*/
+    Node* found = get_node_index_tail(&head, &tail, 1);
+    printf("find node: %s\n", found->data);
 
     reverse_list(&head, &tail);
     print_linkedlist(head);
