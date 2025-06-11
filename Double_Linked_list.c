@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,7 +30,7 @@ void delete_node(Node* node)
 int add_head(Node** head, Node** tail, char* data)
 {
     Node* temp = create_node(data);
-    if(temp == NULL)
+    if (temp == NULL)
     {
         return 0;
     }
@@ -89,14 +90,14 @@ void add_tail_fast(Node** head, Node** tail, char* data)
 int add_next(Node** head, Node** tail, char* target_data, char* data)
 {
     Node* temp = create_node(data);
-    Node* test, *tmp;
+    Node* test, * tmp;
 
     for (test = (*head); test != NULL; test = test->next)
     {
         if (strcmp(test->data, target_data) == 0)
         {
-           /* tmp = test->next;
-            test->next = temp;*/
+            /* tmp = test->next;
+             test->next = temp;*/
             temp->prev = test;
             temp->next = test->next;
             test->next = temp;
@@ -116,7 +117,7 @@ int add_next(Node** head, Node** tail, char* target_data, char* data)
 int add_before(Node** head, Node** tail, char* target_data, char* data)
 {
     Node* temp = create_node(data);
-    Node* test, *tmp;
+    Node* test, * tmp;
 
     for (test = *head; test != NULL; test = test->next)
     {
@@ -142,25 +143,25 @@ int add_index(Node** head, Node** tail, int index, char* data)
 {
     int i;
     Node* temp = create_node(data);
-    Node *tmp = (*head);
+    Node* tmp = (*head);
 
-    for(i=0; i<index; i++) // = = =//2
+    for (i = 0; i < index; i++) // = = =//2
     {
-        tmp= tmp->next;
-        if(tmp==NULL)
+        tmp = tmp->next;
+        if (tmp == NULL)
             break;
     }
 
-    if(tmp == NULL)
+    if (tmp == NULL)
     {
-            if(index ==0)
-                return add_head(head, tail, data);
-            if((index-1)==i)
-                add_tail_fast(head, tail, data);
-            return 0;
+        if (index == 0)
+            return add_head(head, tail, data);
+        if ((index - 1) == i)
+            add_tail_fast(head, tail, data);
+        return 0;
     }
 
-    if(index==0)
+    if (index == 0)
     {
         return add_head(head, tail, data);
     }
@@ -173,31 +174,31 @@ int add_index(Node** head, Node** tail, int index, char* data)
 
 int delete_target(Node** head, Node** tail, char* target_data)
 {
-    Node *test;
+    Node* test;
 
     for (test = *head; test != NULL; test = test->next)
     {
         if (strcmp(test->data, target_data) == 0)
         {
-            if(test->prev == NULL)
+            if (test->prev == NULL)
             {
-                (*head)=test->next;
+                (*head) = test->next;
 
-                if(test->next ==NULL)
+                if (test->next == NULL)
                 {
-                    (*tail)=NULL;
+                    (*tail) = NULL;
                 }
 
-                if((*head)!=NULL)
+                if ((*head) != NULL)
                 {
-                    (*head)->prev=NULL;
+                    (*head)->prev = NULL;
                 }
             }
             else
             {
                 test->prev->next = test->next;
 
-                if(test->next !=NULL)
+                if (test->next != NULL)
                 {
                     test->next->prev = test->prev;
                 }
@@ -213,6 +214,58 @@ int delete_target(Node** head, Node** tail, char* target_data)
 int delete_index(Node** head, Node** tail, int index)
 {
 
+    Node* temp = NULL;
+
+    if (head == NULL)
+    {
+        return 1;
+    }
+
+    if (index == 0)
+    {
+        temp = (*head);
+        head = (*head)->next;
+        delete_node((temp));
+        if ((*head) != NULL)
+        {
+            (*head)->prev = NULL;
+        }
+        else
+        {
+            (*tail) = NULL;
+        }
+
+    }
+    else
+    {
+        int i;
+        temp = (*head);
+
+        for (i = 0; i < index; i++)
+        {
+            temp = temp->next; 
+            if (temp == NULL)
+            {
+                return 1;
+            }
+        }
+
+        
+        temp->prev->next = temp->next;
+        if (temp->next != NULL)
+        {
+            temp->next->prev = temp->prev;
+        }
+        else
+        {
+            (*tail) = temp->prev;
+        }
+        
+        delete_node(temp);
+
+        return 0;
+
+    }
 }
 
 Node* get_node_index_tail(Node** head, Node** tail, int index)
@@ -222,53 +275,53 @@ Node* get_node_index_tail(Node** head, Node** tail, int index)
 
 void delete_all(Node* head)
 {
-     Node* temp;
+    Node* temp;
 
-     while (head != NULL)
-     {
-         temp = head->next;
-         delete_node(head);
-         head = temp;
-     }
+    while (head != NULL)
+    {
+        temp = head->next;
+        delete_node(head);
+        head = temp;
+    }
 }
 
-void reverse_list(Node **head, Node** tail)
+void reverse_list(Node** head, Node** tail)
 {
-    Node *current=(*head),* temp;
+    Node* current = (*head), * temp;
 
-    while(current!=NULL)
+    while (current != NULL)
     {
-        temp=current->next;
-        current->next=current->prev;
-        current->prev=temp;
-        current=temp;
+        temp = current->next;
+        current->next = current->prev;
+        current->prev = temp;
+        current = temp;
     }
 
-    Node *tmp =(*head);
+    Node* tmp = (*head);
 
-    (*head)=(*tail);
-    (*tail)=tmp;
+    (*head) = (*tail);
+    (*tail) = tmp;
 }
 
-void print_linkedlist(Node *head)
+void print_linkedlist(Node* head)
 {
-    Node *test=head;
+    Node* test = head;
 
-    while(test!=NULL)
+    while (test != NULL)
     {
         printf("%s >>", test->data);
         test = test->next;
     }
 }
 
-void print_reverse_linkedlist(Node *head)
+void print_reverse_linkedlist(Node* head)
 {
-    Node *test ;
+    Node* test;
 
-    for(test=head; test->next !=NULL; test=test->next)
+    for (test = head; test->next != NULL; test = test->next)
         ;
 
-    while(test!=NULL)
+    while (test != NULL)
     {
         printf("%s >>", test->data);
         test = test->prev;
@@ -277,9 +330,9 @@ void print_reverse_linkedlist(Node *head)
 
 void print_from_tail(Node* tail)
 {
-     Node *test=tail ;
+    Node* test = tail;
 
-      while(test!=NULL)
+    while (test != NULL)
     {
         printf("%s >>", test->data);
         test = test->prev;
@@ -291,19 +344,19 @@ int main()
     Node* head = NULL;
     Node* tail = NULL;
 
-    int r= add_head(&head, &tail, "hello");
-    if(r==0)
+    int r = add_head(&head, &tail, "hello"); //hello
+    if (r == 0)
     {
         printf("fail!\n");
     }
 
-    add_tail(&head, &tail, "world");
-    add_tail_fast(&head, &tail, "nice");
+    add_tail(&head, &tail, "world"); //hello world
+    add_tail_fast(&head, &tail, "nice"); //hello world nice
 
-    add_next(&head, &tail, "hello", "good");
-    add_before(&head, &tail, "good", "very good");
+    add_next(&head, &tail, "hello", "good"); //hello good world nice
+    add_before(&head, &tail, "good", "very good"); //hello very good good world nice
 
-    add_index(&head, &tail, 2, "bad");
+    add_index(&head, &tail, 2, "bad"); //hello very good bad good world nice
     add_index(&head, &tail, 10, "too bad");
 
     print_linkedlist(head);
@@ -319,19 +372,19 @@ int main()
     print_linkedlist(head);
     printf("\n");
 
-    /*delete_index(&head, &tail, 1);
+    delete_index(&head, &tail, 1);
     print_linkedlist(head);
     printf("\n");
 
-    Node* found = get_node_index_tail(&head, &tail, 1);
+    /*Node* found = get_node_index_tail(&head, &tail, 1);
     printf("find node: &s\n", found->data);*/
 
     reverse_list(&head, &tail);
     print_linkedlist(head);
     printf("\n");
 
-    //delete_all(head);
+//    delete_all(head);
     //print_linkedlist(head);
-
+    
     return 0;
 }
