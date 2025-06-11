@@ -224,7 +224,7 @@ int delete_index(Node** head, Node** tail, int index)
     if (index == 0)
     {
         temp = (*head);
-        head = (*head)->next;
+        (*head) = (*head)->next;
         delete_node((temp));
         if ((*head) != NULL)
         {
@@ -234,7 +234,6 @@ int delete_index(Node** head, Node** tail, int index)
         {
             (*tail) = NULL;
         }
-
     }
     else
     {
@@ -243,14 +242,14 @@ int delete_index(Node** head, Node** tail, int index)
 
         for (i = 0; i < index; i++)
         {
-            temp = temp->next; 
+            temp = temp->next;
             if (temp == NULL)
             {
                 return 1;
             }
         }
 
-        
+
         temp->prev->next = temp->next;
         if (temp->next != NULL)
         {
@@ -260,7 +259,7 @@ int delete_index(Node** head, Node** tail, int index)
         {
             (*tail) = temp->prev;
         }
-        
+
         delete_node(temp);
 
         return 0;
@@ -268,13 +267,14 @@ int delete_index(Node** head, Node** tail, int index)
     }
 }
 
-Node* get_node_index_tail(Node** head, Node** tail, int index)
+Node* get_node_index_tail(Node** tail, int index)
 {
     Node* temp = NULL;
 
     int i;
 
-    temp = (*head);
+    for(temp=(*tail); temp->prev!=NULL; temp=temp->prev)
+    ;
 
     for (i = 0; i < index; i++)
     {
@@ -288,15 +288,15 @@ Node* get_node_index_tail(Node** head, Node** tail, int index)
     return temp;
 }
 
-void delete_all(Node* head)
+void delete_all(Node** head)
 {
     Node* temp;
 
-    while (head != NULL)
+    while ((*head) != NULL)
     {
-        temp = head->next;
-        delete_node(head);
-        head = temp;
+        temp = (*head)->next;
+        delete_node(*head);
+        (*head) = temp;
     }
 }
 
@@ -391,15 +391,15 @@ int main()
     print_linkedlist(head);
     printf("\n");
 
-    Node* found = get_node_index_tail(&head, &tail, 1);
+    Node* found = get_node_index_tail(&tail, 1);
     printf("find node: %s\n", found->data);
 
     reverse_list(&head, &tail);
     print_linkedlist(head);
     printf("\n");
 
-//    delete_all(head);
-    //print_linkedlist(head);
-    
+    delete_all(&head);
+    print_linkedlist(head);
+
     return 0;
 }
