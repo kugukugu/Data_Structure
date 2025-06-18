@@ -97,6 +97,8 @@ void printPoly(Term* poly)
 {
     Term* tmp;
 
+    printf("P1: ");
+
     for (tmp = poly; tmp != NULL; tmp = tmp->next)
     {
         printf("%dx^%d", tmp->coef, tmp->exp);
@@ -117,7 +119,6 @@ int main()
     poly1 = insertTerm(poly1, 3, 10);
     poly1 = insertTerm(poly1, -3, 10);
 
-    printf("P1: ");
     printPoly(poly1);
 
     return 0;
