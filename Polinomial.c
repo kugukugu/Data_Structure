@@ -12,65 +12,53 @@ typedef struct Term {
 
 Term* insertTerm(Term* poly, int coef, int exp)
 {
-    Term* new1 = (Term*)malloc(sizeof(Term));
-    new1->coef = coef;
-    new1->exp = exp;
-    new1->next = NULL;
-    new1->prev = NULL;
+    Term* newTerm = (Term*)malloc(sizeof(Term));
+    newTerm->coef = coef;
+    newTerm->exp = exp;
+    newTerm->next = NULL;
+    newTerm->prev = NULL;
 
-    Term* temp = poly;
-
+    // 다항식이 비어있을 경우
     if (poly == NULL)
-    {
-        poly = new1;
+        return newTerm;
+
+    Term* current = poly;
+
+    // 맨 앞에 삽입 (가장 높은 차수)
+    if (exp > current->exp) {
+        newTerm->next = current;
+        current->prev = newTerm;
+        return newTerm;
     }
-    else
-    {
-        //차수를 찾는다.
-        // 동일한 차수면 항을 합친다.
-        //차수보다 낮은 것을 찾으면 그 앞에 끼워 넣는다.
-        //맨 앞에 넣으면  poly도 바뀐다.
 
-        while (new1->exp > temp->exp)
-        {
-            temp = temp->next;
-            printf("error\n");
-            if (temp->next == NULL)
-            {
-                break;
-            }
+    // 중간이나 뒤에 삽입
+    while (current != NULL) {
+        if (exp == current->exp) {
+            // 차수가 같은 항이 있으면 계수만 더함
+            current->coef += coef;
+            free(newTerm);
+            return poly;
         }
+        else if (exp > current->exp) {
+            // 중간에 삽입
+            newTerm->next = current;
+            newTerm->prev = current->prev;
+            if (current->prev)
+                current->prev->next = newTerm;
+            current->prev = newTerm;
 
-        if (new1->exp == temp->exp)
-        {
-            temp->coef = new1->coef + temp->coef;
-            free(new1);
+            // head가 바뀌었는지 확인
+            if (current == poly)
+                return newTerm;
+            return poly;
         }
-        else
-        {
-            if (temp->prev == NULL && temp->exp < new1->exp)
-            {
-                temp->prev = new1;
-                poly = new1;
-                new1->next = temp;
-                
-            }
-            else
-            {
-                if (temp->next == NULL && temp->exp > new1->exp)
-                {
-                    temp->next = new1;
-                    new1->prev = temp;
-                }
-                else 
-                { 
-                    new1->next = temp;
-                    new1->prev = temp->prev;
-                    new1->prev->next = new1;
-                    new1->next->prev = new1;
-                }
-            }
+        else if (current->next == NULL) {
+            // 맨 뒤에 삽입
+            current->next = newTerm;
+            newTerm->prev = current;
+            return poly;
         }
+        current = current->next;
     }
 
     return poly;
@@ -96,8 +84,8 @@ int main()
     poly1 = insertTerm(poly1, 3, 2);
     poly1 = insertTerm(poly1, 3, 1);
     poly1 = insertTerm(poly1, 1, 0);
-   /* poly1 = insertTerm(poly1, 2, 0);
-    poly1 = insertTerm(poly1, 3, 10);*/
+    poly1 = insertTerm(poly1, 2, 0);
+    poly1 = insertTerm(poly1, 3, 10);
 
     printf("P1: ");
     printPoly(poly1);
