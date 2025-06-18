@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 typedef struct Term {
     int coef;
@@ -21,73 +22,73 @@ Term* insertTerm(Term* poly, int coef, int exp)
     // 다항식이 비어있을 경우
     if (poly == NULL)
     {
-            poly = newTerm;
+        poly = newTerm;
     }
     else
     {
-            Term* tmp = poly;
-            Term* tmp2 = NULL;
+        Term* tmp = poly;
+        Term* tmp2 = NULL;
 
-            while(tmp !=NULL)
+        while (tmp != NULL)
+        {
+            if (newTerm->exp >= tmp->exp)
+                break;
+            if (tmp->next == NULL)
             {
-                if(newTerm->exp >= tmp->exp)
-                    break;
-                if(tmp->next == NULL)
-                {
-                    tmp2 = tmp;
-                }
-                tmp=tmp->next;
+                tmp2 = tmp;
             }
+            tmp = tmp->next;
+        }
 
-            if(tmp == NULL)
+        if (tmp == NULL)
+        {
+            newTerm->prev = tmp2;
+            tmp2->next = newTerm;
+        }
+        else
+        {
+            if (tmp->exp == newTerm->exp)
             {
-                newTerm->prev = tmp2;
-                tmp2->next = newTerm;
-            }
-            else
-            {
-                if(tmp->exp == newTerm->exp)
-                {
-                    tmp->coef += newTerm->coef;
-                    free (newTerm) ;
+                tmp->coef += newTerm->coef;
+                free(newTerm);
 
-                    if(tmp->coef == 0)  //계수가 0이다. 삭제 대상 항
-                    {
-                        if(tmp->prev == NULL)
-                        {
-                            poly =tmp->next;
-                            if(poly != NULL)
-                            {
-                                poly->prev = NULL;
-                            }
-                        }
-                        else
-                        {
-                            tmp->prev->next = tmp->next;
-                            if(tmp->prev -> next != NULL)
-                            {
-                                tmp->next->prev= tmp->prev;
-                            }
-                        }
-                        free(tmp);
-                    }
-                }
-                else
+                if (tmp->coef == 0)  //계수가 0이다. 삭제 대상 항
                 {
-                    newTerm->next = tmp;
-                    newTerm->prev = tmp->prev;
-                    tmp->prev = newTerm;
-
-                    if(newTerm->prev !=NULL)
+                    if (tmp->prev == NULL)
                     {
-                        newTerm->prev->next = newTerm;
+                        poly = tmp->next;
+                        if (poly != NULL)
+                        {
+                            poly->prev = NULL;
+                        }
                     }
                     else
                     {
-                        poly = newTerm;
+                        tmp->prev->next = tmp->next;
+                        if (tmp->prev->next != NULL)
+                        {
+                            tmp->next->prev = tmp->prev;
+                        }
                     }
+                    free(tmp);
                 }
             }
+            else
+            {
+                newTerm->next = tmp;
+                newTerm->prev = tmp->prev;
+                tmp->prev = newTerm;
+
+                if (newTerm->prev != NULL)
+                {
+                    newTerm->prev->next = newTerm;
+                }
+                else
+                {
+                    poly = newTerm;
+                }
+            }
+        }
     }
 
     return poly;
@@ -108,40 +109,40 @@ void printPoly(Term* poly)
 
 Term* addPoly(Term* poly1, Term* poly2)
 {
-    Term* tmp=poly1, *tmp2=poly2, *poly3=NULL;
+    Term* tmp = poly1, * tmp2 = poly2, * poly3 = NULL;
 
-    while(tmp!=NULL && tmp2!=NULL)
+    while (tmp != NULL && tmp2 != NULL)
     {
-        if(tmp->exp>tmp2->exp)
+        if (tmp->exp > tmp2->exp)
         {
-            poly3=insertTerm(poly3, tmp->coef, tmp->exp);
+            poly3 = insertTerm(poly3, tmp->coef, tmp->exp);
             tmp = tmp->next;
         }
-        else if (tmp->exp==tmp2->exp)
+        else if (tmp->exp == tmp2->exp)
         {
-            if(tmp->coef + tmp2->coef !=0)
+            if (tmp->coef + tmp2->coef != 0)
             {
-                poly3=insertTerm(poly3, tmp->coef+tmp2->coef, tmp->exp );
+                poly3 = insertTerm(poly3, tmp->coef + tmp2->coef, tmp->exp);
             }
             tmp = tmp->next;
             tmp2 = tmp2->next;
         }
         else
         {
-            poly3=insertTerm(poly3, tmp2->coef, tmp2->exp);
+            poly3 = insertTerm(poly3, tmp2->coef, tmp2->exp);
             tmp2 = tmp2->next;
         }
     }
 
-    while(tmp != NULL)
+    while (tmp != NULL)
     {
-        poly3=insertTerm(poly3, tmp->coef, tmp->exp);
+        poly3 = insertTerm(poly3, tmp->coef, tmp->exp);
         tmp = tmp->next;
     }
 
-    while(tmp2 != NULL)
+    while (tmp2 != NULL)
     {
-        poly3=insertTerm(poly3, tmp2->coef, tmp2->exp);
+        poly3 = insertTerm(poly3, tmp2->coef, tmp2->exp);
         tmp2 = tmp2->next;
     }
 
@@ -150,17 +151,31 @@ Term* addPoly(Term* poly1, Term* poly2)
 
 Term* mulPoly(Term* poly1, Term* poly2)
 {
-    Term* p1, *p2, *mul=NULL;
+    Term* p1, * p2, * mul = NULL;
 
-    for(p1=poly1; p1!=NULL; p1=p1->next)
+    for (p1 = poly1; p1 != NULL; p1 = p1->next)
     {
-        for(p2=poly2; p2!=NULL; p2=p2->next)
+        for (p2 = poly2; p2 != NULL; p2 = p2->next)
         {
-            mul=insertTerm(mul, (p1->coef)*(p2->coef), (p1->exp) + (p2->exp));
+            mul = insertTerm(mul, (p1->coef) * (p2->coef), (p1->exp) + (p2->exp));
         }
     }
 
     return mul;
+}
+
+int evalPoly(Term* poly, int x)
+{
+    Term* tmp = poly;
+    int sum = 0;
+    
+    while (tmp != NULL)
+    {
+        sum += tmp->coef * pow(x, tmp->exp);
+        tmp = tmp->next;
+    }
+
+    return sum;
 }
 
 int main()
@@ -171,7 +186,7 @@ int main()
     poly1 = insertTerm(poly1, 3, 1);
     poly1 = insertTerm(poly1, 1, 0);
     poly1 = insertTerm(poly1, 2, 0);
-    poly1 = insertTerm(poly1, 3, 10);
+    poly1 = insertTerm(poly1, 3, 3);
 
     printf("P1: ");
     printPoly(poly1);
@@ -196,8 +211,8 @@ int main()
     printf("P4: ");
     printPoly(poly4);
 
-    /*int result = evalPoly(poly3, 4);
-    printf("P3 = %d\n", result);*/
+    int result = evalPoly(poly1, 4);
+    printf("P1 = %d\n", result);
 
     return 0;
 }
