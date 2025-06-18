@@ -12,15 +12,15 @@ typedef struct Term {
 
 Term* insertTerm(Term* poly, int coef, int exp)
 {
-    Term* new1 = (Term *)malloc(sizeof(Term));
+    Term* new1 = (Term*)malloc(sizeof(Term));
     new1->coef = coef;
     new1->exp = exp;
     new1->next = NULL;
     new1->prev = NULL;
 
-    Term *temp = poly;
+    Term* temp = poly;
 
-    if(poly==NULL)
+    if (poly == NULL)
     {
         poly = new1;
     }
@@ -31,29 +31,45 @@ Term* insertTerm(Term* poly, int coef, int exp)
         //차수보다 낮은 것을 찾으면 그 앞에 끼워 넣는다.
         //맨 앞에 넣으면  poly도 바뀐다.
 
-        while(new1->exp > temp->exp)
+        while (new1->exp > temp->exp)
         {
-            temp=temp->next;
+            temp = temp->next;
+            printf("error\n");
+            if (temp->next == NULL)
+            {
+                break;
+            }
         }
 
-        if(new1->exp == temp->exp)
+        if (new1->exp == temp->exp)
         {
-            temp->coef = new1->coef+temp->coef;
+            temp->coef = new1->coef + temp->coef;
             free(new1);
         }
         else
         {
-            new1->next=temp;
-            new1->prev=temp->prev;
-            if(new1->prev!=NULL)
+            if (temp->prev == NULL && temp->exp < new1->exp)
             {
-                new1->prev->next=new1;
+                temp->prev = new1;
+                poly = new1;
+                new1->next = temp;
+                
             }
             else
             {
-                poly=new1;
+                if (temp->next == NULL && temp->exp > new1->exp)
+                {
+                    temp->next = new1;
+                    new1->prev = temp;
+                }
+                else 
+                { 
+                    new1->next = temp;
+                    new1->prev = temp->prev;
+                    new1->prev->next = new1;
+                    new1->next->prev = new1;
+                }
             }
-            new1->next->prev=new1;
         }
     }
 
@@ -64,10 +80,10 @@ void printPoly(Term* poly)
 {
     Term* tmp;
 
-    for(tmp=poly; tmp!=NULL; tmp = tmp->next)
+    for (tmp = poly; tmp != NULL; tmp = tmp->next)
     {
-        printf("%dx^%d",tmp->coef, tmp->exp);
-        if(tmp->next!=NULL)
+        printf("%dx^%d", tmp->coef, tmp->exp);
+        if (tmp->next != NULL)
             printf(" + ");
     }
     printf("\n");
@@ -80,7 +96,8 @@ int main()
     poly1 = insertTerm(poly1, 3, 2);
     poly1 = insertTerm(poly1, 3, 1);
     poly1 = insertTerm(poly1, 1, 0);
-    poly1 = insertTerm(poly1, 3, 10);
+   /* poly1 = insertTerm(poly1, 2, 0);
+    poly1 = insertTerm(poly1, 3, 10);*/
 
     printf("P1: ");
     printPoly(poly1);
