@@ -97,8 +97,6 @@ void printPoly(Term* poly)
 {
     Term* tmp;
 
-    printf("P1: ");
-
     for (tmp = poly; tmp != NULL; tmp = tmp->next)
     {
         printf("%dx^%d", tmp->coef, tmp->exp);
@@ -106,6 +104,48 @@ void printPoly(Term* poly)
             printf(" + ");
     }
     printf("\n");
+}
+
+Term* addPoly(Term* poly1, Term* poly2)
+{
+    Term* tmp=poly1, *tmp2=poly2, *poly3=NULL;
+
+    while(tmp!=NULL && tmp2!=NULL)
+    {
+        if(tmp->exp>tmp2->exp)
+        {
+            poly3=insertTerm(poly3, tmp->coef, tmp->exp);
+            tmp = tmp->next;
+        }
+        else if (tmp->exp==tmp2->exp)
+        {
+            if(tmp->coef + tmp2->coef !=0)
+            {
+                poly3=insertTerm(poly3, tmp->coef+tmp2->coef, tmp->exp );
+            }
+            tmp = tmp->next;
+            tmp2 = tmp2->next;
+        }
+        else
+        {
+            poly3=insertTerm(poly3, tmp2->coef, tmp2->exp);
+            tmp2 = tmp2->next;
+        }
+    }
+
+    while(tmp != NULL)
+    {
+        poly3=insertTerm(poly3, tmp->coef, tmp->exp);
+        tmp = tmp->next;
+    }
+
+    while(tmp2 != NULL)
+    {
+        poly3=insertTerm(poly3, tmp2->coef, tmp2->exp);
+        tmp2 = tmp2->next;
+    }
+
+    return poly3;
 }
 
 int main()
@@ -117,9 +157,25 @@ int main()
     poly1 = insertTerm(poly1, 1, 0);
     poly1 = insertTerm(poly1, 2, 0);
     poly1 = insertTerm(poly1, 3, 10);
-    poly1 = insertTerm(poly1, -3, 10);
 
+    printf("P1: ");
     printPoly(poly1);
+
+    Term* poly2 = NULL;
+
+    poly2 = insertTerm(poly2, 3, 2);
+    poly2 = insertTerm(poly2, 6, 1);
+    poly2 = insertTerm(poly2, 1, 4);
+    poly2 = insertTerm(poly2, 1, 0);
+    poly2 = insertTerm(poly2, 2, 6);
+    poly2 = insertTerm(poly2, -3, 10);
+
+    printf("P2: ");
+    printPoly(poly2);
+
+    Term* poly3 = addPoly(poly1, poly2);
+    printf("P3: ");
+    printPoly(poly3);
 
     return 0;
 }
