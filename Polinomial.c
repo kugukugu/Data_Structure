@@ -148,6 +148,21 @@ Term* addPoly(Term* poly1, Term* poly2)
     return poly3;
 }
 
+Term* mulPoly(Term* poly1, Term* poly2)
+{
+    Term* p1, *p2, *mul=NULL;
+
+    for(p1=poly1; p1!=NULL; p1=p1->next)
+    {
+        for(p2=poly2; p2!=NULL; p2=p2->next)
+        {
+            mul=insertTerm(mul, (p1->coef)*(p2->coef), (p1->exp) + (p2->exp));
+        }
+    }
+
+    return mul;
+}
+
 int main()
 {
     Term* poly1 = NULL;
@@ -176,6 +191,13 @@ int main()
     Term* poly3 = addPoly(poly1, poly2);
     printf("P3: ");
     printPoly(poly3);
+
+    Term* poly4 = mulPoly(poly1, poly2);
+    printf("P4: ");
+    printPoly(poly4);
+
+    /*int result = evalPoly(poly3, 4);
+    printf("P3 = %d\n", result);*/
 
     return 0;
 }
