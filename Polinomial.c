@@ -20,45 +20,74 @@ Term* insertTerm(Term* poly, int coef, int exp)
 
     // 다항식이 비어있을 경우
     if (poly == NULL)
-        return newTerm;
-
-    Term* current = poly;
-
-    // 맨 앞에 삽입 (가장 높은 차수)
-    if (exp > current->exp) {
-        newTerm->next = current;
-        current->prev = newTerm;
-        return newTerm;
+    {
+            poly = newTerm;
     }
+    else
+    {
+            Term* tmp = poly;
+            Term* tmp2 = NULL;
 
-    // 중간이나 뒤에 삽입
-    while (current != NULL) {
-        if (exp == current->exp) {
-            // 차수가 같은 항이 있으면 계수만 더함
-            current->coef += coef;
-            free(newTerm);
-            return poly;
-        }
-        else if (exp > current->exp) {
-            // 중간에 삽입
-            newTerm->next = current;
-            newTerm->prev = current->prev;
-            if (current->prev)
-                current->prev->next = newTerm;
-            current->prev = newTerm;
+            while(tmp !=NULL)
+            {
+                if(newTerm->exp >= tmp->exp)
+                    break;
+                if(tmp->next == NULL)
+                {
+                    tmp2 = tmp;
+                }
+                tmp=tmp->next;
+            }
 
-            // head가 바뀌었는지 확인
-            if (current == poly)
-                return newTerm;
-            return poly;
-        }
-        else if (current->next == NULL) {
-            // 맨 뒤에 삽입
-            current->next = newTerm;
-            newTerm->prev = current;
-            return poly;
-        }
-        current = current->next;
+            if(tmp == NULL)
+            {
+                newTerm->prev = tmp2;
+                tmp2->next = newTerm;
+            }
+            else
+            {
+                if(tmp->exp == newTerm->exp)
+                {
+                    tmp->coef += newTerm->coef;
+                    free (newTerm) ;
+
+                    if(tmp->coef == 0)  //계수가 0이다. 삭제 대상 항
+                    {
+                        if(tmp->prev == NULL)
+                        {
+                            poly =tmp->next;
+                            if(poly != NULL)
+                            {
+                                poly->prev = NULL;
+                            }
+                        }
+                        else
+                        {
+                            tmp->prev->next = tmp->next;
+                            if(tmp->prev -> next != NULL)
+                            {
+                                tmp->next->prev= tmp->prev;
+                            }
+                        }
+                        free(tmp);
+                    }
+                }
+                else
+                {
+                    newTerm->next = tmp;
+                    newTerm->prev = tmp->prev;
+                    tmp->prev = newTerm;
+
+                    if(newTerm->prev !=NULL)
+                    {
+                        newTerm->prev->next = newTerm;
+                    }
+                    else
+                    {
+                        poly = newTerm;
+                    }
+                }
+            }
     }
 
     return poly;
@@ -86,6 +115,7 @@ int main()
     poly1 = insertTerm(poly1, 1, 0);
     poly1 = insertTerm(poly1, 2, 0);
     poly1 = insertTerm(poly1, 3, 10);
+    poly1 = insertTerm(poly1, -3, 10);
 
     printf("P1: ");
     printPoly(poly1);
