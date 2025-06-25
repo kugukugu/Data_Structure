@@ -168,10 +168,10 @@ int evalPoly(Term* poly, int x)
 {
     Term* tmp = poly;
     int sum = 0;
-    
+
     while (tmp != NULL)
     {
-        sum += tmp->coef * pow(x, tmp->exp);
+        sum += tmp->coef * (int)pow(x, tmp->exp);
         tmp = tmp->next;
     }
 
